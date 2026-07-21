@@ -1,0 +1,25 @@
+# Compile-and-unit-test on every push/PR. Does not run acceptance tests
+# (those need live NORAINADNS_ENDPOINT + NORAINADNS_API_KEY credentials).
+name: test
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      - run: go mod download
+      - run: go build ./...
+      - run: go vet ./...
+      - run: go test ./...

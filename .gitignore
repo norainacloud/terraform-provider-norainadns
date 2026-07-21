@@ -1,0 +1,16 @@
+# Compiled provider binary
+terraform-provider-norainadns
+terraform-provider-norainadns_v*
+
+# GoReleaser output
+dist/
+
+# Terraform working files
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Local editor / OS
+.DS_Store
