@@ -5,7 +5,7 @@
 variable "norainadns_endpoint" {
   description = "The NorainaDNS API endpoint"
   type        = string
-  default     = "https://dns.noraina.cloud"
+  default     = "https://dash.norainadns.com"
 }
 
 variable "norainadns_api_key" {

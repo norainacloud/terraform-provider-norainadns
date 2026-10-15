@@ -41,7 +41,7 @@ make install
 1. **Set up authentication:**
 
 ```bash
-export NORAINADNS_ENDPOINT="https://dns.noraina.cloud"
+export NORAINADNS_ENDPOINT="https://dash.norainadns.com"
 export NORAINADNS_API_KEY="nordns_your_api_key_here"
 ```
 
@@ -119,7 +119,7 @@ make build
 make test
 
 # Acceptance tests (requires API credentials)
-export NORAINADNS_ENDPOINT="https://dns.noraina.cloud"
+export NORAINADNS_ENDPOINT="https://dash.norainadns.com"
 export NORAINADNS_API_KEY="your_api_key"
 make testacc
 ```

@@ -15,7 +15,7 @@ API keys can be generated from the NorainaDNS web interface under **Settings > A
 ## Base URL
 
 ```
-https://dns.noraina.cloud/api
+https://dash.norainadns.com/api
 ```
 
 ## Endpoints
