@@ -84,7 +84,7 @@ The provider requires an API key for authentication. You can obtain an API key f
 ### Option 1: Environment Variables (Recommended)
 
 ```bash
-export NORAINADNS_ENDPOINT="https://dns.noraina.cloud"
+export NORAINADNS_ENDPOINT="https://dash.norainadns.com"
 export NORAINADNS_API_KEY="nordns_your_api_key_here"
 ```
 
@@ -98,7 +98,7 @@ provider "norainadns" {}
 
 ```hcl
 provider "norainadns" {
-  endpoint = "https://dns.noraina.cloud"
+  endpoint = "https://dash.norainadns.com"
   api_key  = var.norainadns_api_key  # Use a variable, never hardcode!
 }
 ```

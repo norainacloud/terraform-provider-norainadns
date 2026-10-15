@@ -67,14 +67,14 @@ The API key can be provided in two ways:
 1. Via the provider configuration:
 ` + "```hcl" + `
 provider "norainadns" {
-  endpoint = "https://dns.noraina.cloud"
+  endpoint = "https://dash.norainadns.com"
   api_key  = "nordns_your_api_key_here"
 }
 ` + "```" + `
 
 2. Via environment variables:
 ` + "```bash" + `
-export NORAINADNS_ENDPOINT="https://dns.noraina.cloud"
+export NORAINADNS_ENDPOINT="https://dash.norainadns.com"
 export NORAINADNS_API_KEY="nordns_your_api_key_here"
 ` + "```" + `
 `,

@@ -10,7 +10,7 @@ Get up and running with NorainaDNS in 5 minutes.
 ## Step 1: Set Up Authentication
 
 ```bash
-export NORAINADNS_ENDPOINT="https://dns.noraina.cloud"
+export NORAINADNS_ENDPOINT="https://dash.norainadns.com"
 export NORAINADNS_API_KEY="nordns_your_api_key_here"
 ```
 

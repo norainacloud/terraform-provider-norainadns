@@ -15,10 +15,14 @@ API keys can be generated from the NorainaDNS web interface under **Settings > A
 ## Base URL
 
 ```
-https://dns.noraina.cloud/api
+https://dash.norainadns.com/api/v1
 ```
 
 ## Endpoints
+
+Paths below are relative to the base URL. All identifiers (`id`, `zoneId`, `monitorId`) are UUID strings.
+
+Successful responses are wrapped as `{ "success": true, "data": ... }`.
 
 ### Zones
 
@@ -31,9 +35,10 @@ GET /zones
 **Response:**
 ```json
 {
+  "success": true,
   "data": [
     {
-      "id": 1,
+      "id": "3f2b1c9e-8a4d-4e6f-9b1a-2c7d5e8f0a13",
       "domainName": "example.com",
       "description": "Production domain",
       "isActive": true,
@@ -92,10 +97,11 @@ GET /zones/:zoneId/records
 **Response:**
 ```json
 {
+  "success": true,
   "data": [
     {
-      "id": 1,
-      "zoneId": 1,
+      "id": "b7e4a2d1-5c3f-4a8b-9e6d-1f0c2a3b4d5e",
+      "zoneId": "3f2b1c9e-8a4d-4e6f-9b1a-2c7d5e8f0a13",
       "name": "www",
       "recordType": "A",
       "ttl": 300,
@@ -104,7 +110,7 @@ GET /zones/:zoneId/records
       "syncStatus": "synced",
       "values": [
         {
-          "id": 1,
+          "id": "c1d2e3f4-a5b6-4c7d-8e9f-0a1b2c3d4e5f",
           "value": "192.0.2.1",
           "priority": 0,
           "weight": 0,
@@ -156,7 +162,7 @@ Content-Type: application/json
     {
       "value": "192.0.2.10",
       "priority": 0,
-      "monitorId": 123
+      "monitorId": "9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d"
     },
     {
       "value": "192.0.2.20",
@@ -205,9 +211,10 @@ GET /monitors
 **Response:**
 ```json
 {
+  "success": true,
   "data": [
     {
-      "id": 1,
+      "id": "9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d",
       "name": "Origin Server",
       "description": "Health check for origin",
       "protocol": "HTTPS",
@@ -275,9 +282,10 @@ DELETE /monitors/:id
 **Error Response (Monitor In Use):**
 ```json
 {
+  "success": false,
   "error": {
-    "code": "MONITOR_IN_USE",
-    "message": "Monitor is currently in use by DNS records"
+    "code": "CONFLICT",
+    "message": "Cannot delete a monitor that is in use by records"
   }
 }
 ```
@@ -290,6 +298,7 @@ All error responses follow this format:
 
 ```json
 {
+  "success": false,
   "error": {
     "code": "ERROR_CODE",
     "message": "Human-readable error message",
@@ -302,15 +311,23 @@ All error responses follow this format:
 
 | Code | HTTP Status | Description |
 |------|-------------|-------------|
-| UNAUTHORIZED | 401 | Invalid or missing API key |
-| FORBIDDEN | 403 | API key doesn't have permission |
+| VALIDATION_ERROR | 400 | Invalid request data (`details.errors` lists the failing fields) |
+| INVALID_DOMAIN | 400 | Invalid domain name |
+| AUTH_FAILED | 401 | Missing or invalid credentials |
+| INVALID_API_KEY | 401 | Invalid or expired API key |
+| ACCESS_DENIED | 403 | Not allowed to perform this action |
+| INSUFFICIENT_PERMISSIONS | 403 | API key lacks the required permission |
+| ZONE_ACCESS_DENIED | 403 | API key is not scoped to this zone |
+| QUOTA_EXCEEDED | 403 | Tenant zone or monitor quota reached |
 | ZONE_NOT_FOUND | 404 | Zone doesn't exist |
 | RECORD_NOT_FOUND | 404 | Record doesn't exist |
 | MONITOR_NOT_FOUND | 404 | Monitor doesn't exist |
-| ZONE_ALREADY_EXISTS | 409 | Zone with this domain already exists |
+| DUPLICATE_ZONE | 409 | Zone with this domain already exists |
 | DUPLICATE_RECORD | 409 | Record with same name/type exists |
-| MONITOR_IN_USE | 409 | Monitor is referenced by records |
-| VALIDATION_ERROR | 422 | Invalid request data |
+| CONFLICT | 409 | Other conflicts, e.g. deleting a monitor still used by records |
+| RATE_LIMIT_EXCEEDED | 429 | Too many requests |
+| PROVIDER_ERROR | 502 | Upstream DNS provider error |
+| PROVIDER_SYNC_ERROR | 502 | Change could not be applied to all DNS providers |
 | INTERNAL_ERROR | 500 | Server error |
 
 ---
@@ -322,12 +339,13 @@ The API has the following rate limits:
 - **100 requests per minute** per API key
 - **1000 requests per hour** per API key
 
-Rate limit headers are included in responses:
+Exceeding a limit returns `429` with error code `RATE_LIMIT_EXCEEDED`. Responses include the standard `RateLimit-Policy`, `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` headers (`RateLimit-Reset` is the number of seconds until the window resets). Because both limits apply, these headers report the hourly window:
 
 ```http
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 95
-X-RateLimit-Reset: 1640000000
+RateLimit-Policy: 1000;w=3600
+RateLimit-Limit: 1000
+RateLimit-Remaining: 995
+RateLimit-Reset: 1800
 ```
 
 ---

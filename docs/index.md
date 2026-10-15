@@ -30,7 +30,7 @@ terraform {
 }
 
 provider "norainadns" {
-  endpoint = "https://dns.noraina.cloud"
+  endpoint = "https://dash.norainadns.com"
   api_key  = var.norainadns_api_key
 }
 
@@ -102,7 +102,7 @@ The API key can be provided in two ways:
 
 ```hcl
 provider "norainadns" {
-  endpoint = "https://dns.noraina.cloud"
+  endpoint = "https://dash.norainadns.com"
   api_key  = "nordns_your_api_key_here"
 }
 ```
@@ -110,7 +110,7 @@ provider "norainadns" {
 #### Via Environment Variables
 
 ```bash
-export NORAINADNS_ENDPOINT="https://dns.noraina.cloud"
+export NORAINADNS_ENDPOINT="https://dash.norainadns.com"
 export NORAINADNS_API_KEY="nordns_your_api_key_here"
 ```
 
